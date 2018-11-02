@@ -1,0 +1,38 @@
+flask 数据库操作
+
+安装flask 数据库扩展
+pip install flask-sqlalchemy
+
+flask-sqlalchemy 扩展常见数据库的url
+mysql                 mysql://username:password@hostname/database
+postgres              postgresql://username:password@hostname/database
+sqllite(linux,macos)  sqllite:///absolute/path/to/database
+SQLite（Windows）     sqlite:///c:/absolute/path/to/database
+
+配置数据库
+hello.py
+import os
+from flask_sqlalchemy import SQLAlchemy
+
+basedir = os.path.abspath(os.path.dirname(__file__)
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URL'] = 'sqlite:///' + os.path.join(basedir,'data.sqlite)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+定义Role 和User 模型
+class Role(db.Model):
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer,primary_key=True)              #Integer   int  普通整形,通常事32位
+    name = db.Column(db,String(64),unique=True)              #String 变长字符串
+
+    def __repr__(self):
+        retrun '<Role %r>' % self.name
+
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)                      #SQLAlchemy 列中primary_key   如果设为True 列为表的主键
+    username = db.Column(db.String(64), unique=True, index=True)      #SQLAlchemy 列中unique   如果设为True 列不允许出现重复的值
+    def __repr__(self):
+        return '<User %r>' % self.username
